@@ -2,6 +2,7 @@ from bottle import Bottle, request
 from .base_controller import BaseController
 from services.booking_service import BookingService
 from models.stay import StayModel
+from utils import login_required
 
 
 class BookingController(BaseController):
@@ -13,8 +14,8 @@ class BookingController(BaseController):
 
     def setup_routes(self):
         self.app.route('/bookings', method='GET', callback=self.list_bookings)
-        self.app.route('/bookings/add/<stay_id:int>', method=['GET', 'POST'], callback=self.add_booking)
-        self.app.route('/bookings/edit/<booking_id:int>', method=['GET', 'POST'], callback=self.edit_booking)
+        self.app.route('/bookings/add/<stay_id:int>', method=['GET', 'POST'], callback=login_required(self.add_booking))
+        self.app.route('/bookings/edit/<booking_id:int>', method=['GET', 'POST'], callback=login_required(self.edit_booking))
         self.app.route('/bookings/delete/<booking_id:int>', method='POST', callback=self.delete_booking)
 
     def list_bookings(self):
