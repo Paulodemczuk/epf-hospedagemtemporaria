@@ -7,6 +7,7 @@ from controllers.feature_controller import feature_routes
 from controllers.favorite_controller import favorite_routes
 from controllers.login_controller import login_routes
 
+
 def init_controllers(app: Bottle):
     app.merge(user_routes)
     app.merge(login_routes)
@@ -16,4 +17,3 @@ def init_controllers(app: Bottle):
     app.mount('/', review_routes)
     app.mount('/', feature_routes)
     app.mount('/', favorite_routes)
-

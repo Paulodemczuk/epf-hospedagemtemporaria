@@ -1,9 +1,8 @@
 from bottle import Bottle, request
 from .base_controller import BaseController
 from services.stay_service import StayService
-from models.stay import Stay
 from services.review_service import ReviewService
-
+from services.feature_service import FeatureService
 
 
 class StayController(BaseController):
@@ -11,16 +10,21 @@ class StayController(BaseController):
         super().__init__(app)
         self.stay_service = StayService()
         self.review_service = ReviewService()
+        self.feature_service = FeatureService()
         self.setup_routes()
 
     def setup_routes(self):
         self.app.route('/stays', method='GET', callback=self.list_stays)
         self.app.route('/stays/add', method=['GET', 'POST'], callback=self.add_stay)
-        self.app.route('/stays/edit/<stay_id:int>', method=['GET', 'POST'], callback=self.edit_stay)
-        self.app.route('/stays/delete/<stay_id:int>', method='POST', callback=self.delete_stay)
+        self.app.route('/stays/edit/<stay_id:int>', method=['GET', 'POST'],
+                       callback=self.edit_stay)
+        self.app.route('/stays/delete/<stay_id:int>', method='POST',
+                       callback=self.delete_stay)
+        self.app.route('/stays/<stay_id:int>', method='GET',
+                       callback=self.show_stay)
 
     def list_stays(self):
-        city = request.query.get('city')  
+        city = request.query.get('city')
         stays = self.stay_service.search(city=city)
 
         ratings_by_stay = {}
@@ -29,16 +33,19 @@ class StayController(BaseController):
         for stay in stays:
             reviews = self.review_service.get_by_stay(stay.id)
             if reviews:
+                # média das notas
                 avg = sum(r.rating for r in reviews) / len(reviews)
                 if avg.is_integer():
                     ratings_by_stay[stay.id] = int(avg)
                 else:
                     ratings_by_stay[stay.id] = round(avg, 1)
 
+                # taxa de aceitação (% recomenda=True)
                 total = len(reviews)
-                recomendam = sum(1 for r in reviews if getattr(r, 'recomenda', True))
+                recomendam = sum(
+                    1 for r in reviews if getattr(r, 'recomenda', True)
+                )
                 acceptance = (recomendam / total) * 100
-
                 if acceptance.is_integer():
                     acceptance_by_stay[stay.id] = int(acceptance)
                 else:
@@ -47,12 +54,23 @@ class StayController(BaseController):
                 ratings_by_stay[stay.id] = None
                 acceptance_by_stay[stay.id] = None
 
-        return self.render('stays', stays=stays, city=city, ratings_by_stay=ratings_by_stay, acceptance_by_stay=acceptance_by_stay)
-
+        return self.render(
+            'stays',
+            stays=stays,
+            city=city,
+            ratings_by_stay=ratings_by_stay,
+            acceptance_by_stay=acceptance_by_stay
+        )
 
     def add_stay(self):
         if request.method == 'GET':
-            return self.render('stay_form', stay=None, action="/stays/add")
+            features = self.feature_service.get_all()
+            return self.render(
+                'stay_form',
+                stay=None,
+                action="/stays/add",
+                features=features
+            )
         else:
             host_id = int(request.forms.get('host_id') or 1)
             self.stay_service.save(host_id)
@@ -64,7 +82,13 @@ class StayController(BaseController):
             return "Stay não encontrada"
 
         if request.method == 'GET':
-            return self.render('stay_form', stay=stay, action=f"/stays/edit/{stay_id}")
+            features = self.feature_service.get_all()
+            return self.render(
+                'stay_form',
+                stay=stay,
+                action=f"/stays/edit/{stay_id}",
+                features=features
+            )
         else:
             self.stay_service.edit_stay(stay)
             self.redirect('/stays')
@@ -72,6 +96,22 @@ class StayController(BaseController):
     def delete_stay(self, stay_id):
         self.stay_service.delete_stay(stay_id)
         self.redirect('/stays')
+
+    def show_stay(self, stay_id):
+        stay = self.stay_service.get_by_id(stay_id)
+        if not stay:
+            return "Stay não encontrada"
+
+        all_features = self.feature_service.get_all()
+        features_by_id = {f.id: f for f in all_features}
+        stay_features = [features_by_id[fid] for fid in stay.features_ids
+                         if fid in features_by_id]
+
+        return self.render(
+            'stay_details',
+            stay=stay,
+            features=stay_features
+        )
 
 
 stay_routes = Bottle()
