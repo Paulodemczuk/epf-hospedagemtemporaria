@@ -1,6 +1,6 @@
 % rebase('layout', title='Favoritos')
 
-<h1>Favoritos do usuário {{user_id}}</h1>
+<h1>Favoritos do usuário {{user.name if user else user_id}}</h1>
 
 <p><a href="/stays">Voltar para Stays</a></p>
 

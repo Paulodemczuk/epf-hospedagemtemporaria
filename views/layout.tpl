@@ -15,6 +15,8 @@
     <a href="/stays">Stays</a>
     <a href="/favorites">Favoritos</a>
     <a href="/bookings">Reservas</a>
+    <a href="/login">Login</a>
+    <a href="/logout">Logout</a>
 </nav>
 
 <hr>

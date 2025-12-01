@@ -5,10 +5,6 @@
 <form method="post" action="{{action}}">
     <p>Stay: {{stay.title if stay else 'Stay ' + str(stay_id)}}</p>
 
-    <label for="guest_id">Guest ID:</label><br>
-    <input type="number" id="guest_id" name="guest_id"
-           value="{{booking.guest_id if booking else '' or '1'}}"><br><br>
-
     <label for="guests_count">Quantidade de hóspedes:</label><br>
     <input type="number" id="guests_count" name="guests_count"
        value="{{booking.guests_count if booking and hasattr(booking, 'guests_count') else '1'}}" min="1"><br><br>
