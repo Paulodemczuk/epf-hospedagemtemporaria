@@ -1,11 +1,17 @@
 from typing import List, Optional
 from bottle import request
+import os
 from models.stay import StayModel, Stay
 
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '..', 'static', 'img', 'stays')
 
 class StayService:
+
+
     def __init__(self):
         self.model = StayModel()
+        if not os.path.exists(UPLOAD_DIR):
+            os.makedirs(UPLOAD_DIR)
 
     def _reload(self):
         self.model = StayModel()
@@ -42,15 +48,20 @@ class StayService:
         
         features_raw = request.forms.getall('features_ids')
         features_ids = [int(f) for f in features_raw]
+        new_id = self._next_id()
+
+        image_upload = request.files.get('image_file')
+        image_filename = self._save_image_file(image_upload,new_id)
 
         stay = Stay(
-            id=self._next_id(),
+            id=new_id,
             title=title,
             city=city,
             price_per_night=price_per_night,
             max_guests=max_guests,
             host_id=host_id,
-            features_ids=features_ids
+            features_ids=features_ids,
+            image_filename=image_filename
         )
         self.model.add_stay(stay)
 
@@ -68,7 +79,27 @@ class StayService:
         features_raw = request.forms.getall('features_ids')
         stay.features_ids = [int(f) for f in features_raw]
 
+        image_upload=request.files.get('image_file')
+        if image_upload:
+            new_filename = self._save_image_file(image_upload, stay.id)
+            if new_filename:
+                stay.image_filename = new_filename
+
         self.model.update_stay(stay)
 
     def delete_stay(self, stay_id: int):
         self.model.delete_stay(stay_id)
+
+    def _save_image_file(self,file_upload,stay_id):
+        if not file_upload:
+            return None
+        
+        name, ext = os.path.splitext(file_upload.filename)
+        if ext.lower() not in ('.png', '.jpg', '.jpeg'):
+            return None
+        
+        filename = f"stay_{stay_id}{ext}"
+        save_path = os.path.join(UPLOAD_DIR,filename)
+
+        file_upload.save(save_path, overwrite=True)
+        return filename

@@ -2,7 +2,7 @@
 
 <h1>{{'Editar stay' if stay else 'Nova stay'}}</h1>
 
-<form method="post" action="{{action}}">
+<form method="post" action="{{action}}" enctype="multipart/form-data">
     <label for="title">Título:</label><br>
     <input type="text" id="title" name="title"
            value="{{stay.title if stay else ''}}" required><br><br>
@@ -18,6 +18,20 @@
     <label for="max_guests">Máx hóspedes:</label><br>
     <input type="number" id="max_guests" name="max_guests" min="1"
            value="{{stay.max_guests if stay else '1'}}" required><br><br>
+
+    <div style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+        <label>Imagem da Hospedagem:</label><br>
+        
+        % if stay and stay.image_filename and stay.image_filename != 'default.jpg':
+            <div style="margin: 10px 0;">
+                <img src="/static/img/stays/{{stay.image_filename}}" alt="Foto Atual" style="max-width: 200px; border-radius: 4px;">
+                <br><small style="color: #666;">Imagem atual</small>
+            </div>
+        % end
+
+        <input type="file" name="image_file" accept="image/png, image/jpeg, image/jpg">
+        <br><small>Formatos aceitos: JPG, PNG</small>
+    </div>
 
 
     <h3>Comodidades / Tipo</h3>
