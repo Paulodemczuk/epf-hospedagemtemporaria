@@ -8,10 +8,5 @@
         "id": 2,
         "user_id": 2,
         "stay_id": 1
-    },
-    {
-        "id": 3,
-        "user_id": 3,
-        "stay_id": 1
     }
 ]

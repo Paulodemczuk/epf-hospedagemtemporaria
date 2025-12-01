@@ -22,5 +22,21 @@
         "rating": 5,
         "comment": "",
         "recomenda": true
+    },
+    {
+        "id": 4,
+        "stay_id": 2,
+        "user_id": 1,
+        "rating": 5,
+        "comment": "bonzao",
+        "recomenda": true
+    },
+    {
+        "id": 5,
+        "stay_id": 2,
+        "user_id": 4,
+        "rating": 4,
+        "comment": "da boa ",
+        "recomenda": true
     }
 ]
