@@ -11,5 +11,31 @@
             2
         ],
         "image_filename": "default.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Casa muito massa",
+        "city": "Los Santos",
+        "price_per_night": 1600.0,
+        "max_guests": 10,
+        "host_id": 3,
+        "features_ids": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            7,
+            8,
+            9,
+            10,
+            13,
+            14,
+            15,
+            16,
+            18,
+            22
+        ],
+        "image_filename": "stay_2.png"
     }
 ]

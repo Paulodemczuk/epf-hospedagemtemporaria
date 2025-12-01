@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "stay_id": 1,
+        "guest_id": 1,
+        "check_in": "2025-09-30",
+        "check_out": "2025-10-30",
+        "total_price": 3000.0,
+        "status": "confirmed"
+    },
+    {
+        "id": 2,
+        "stay_id": 1,
+        "guest_id": 1,
+        "check_in": "2025-12-03",
+        "check_out": "2025-12-12",
+        "total_price": 1133.9099999999999,
+        "status": "confirmed"
+    },
+    {
+        "id": 3,
+        "stay_id": 1,
+        "guest_id": 2,
+        "check_in": "2026-03-10",
+        "check_out": "2026-04-17",
+        "total_price": 4787.62,
+        "status": "confirmed"
+    }
+]
