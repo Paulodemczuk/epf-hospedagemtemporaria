@@ -21,6 +21,16 @@
             <input type="date" id="birthdate" name="birthdate" required 
                    value="{{user.birthdate if user else ''}}">
         </div>
+
+        <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="text" id="password" name="password" 
+                   {{'required' if not user else ''}}>
+            
+            % if user:
+            <small style="color: #666; font-size: 0.8em;">(Deixe em branco para manter a senha atual)</small>
+            % end
+        </div>
         
         <div class="form-actions">
             <button type="submit" class="btn-submit">Salvar</button>
