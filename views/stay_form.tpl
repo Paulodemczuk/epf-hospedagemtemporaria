@@ -19,9 +19,6 @@
     <input type="number" id="max_guests" name="max_guests" min="1"
            value="{{stay.max_guests if stay else '1'}}" required><br><br>
 
-    <label for="host_id">Host ID:</label><br>
-    <input type="number" id="host_id" name="host_id"
-           value="{{stay.host_id if stay else '1'}}"><br><br>
 
     <h3>Comodidades / Tipo</h3>
     % selected = set(stay.features_ids) if stay else set()

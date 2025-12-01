@@ -3,6 +3,7 @@ from .base_controller import BaseController
 from services.stay_service import StayService
 from services.review_service import ReviewService
 from services.feature_service import FeatureService
+from utils import login_required, get_current_user_id
 
 
 class StayController(BaseController):
@@ -15,9 +16,9 @@ class StayController(BaseController):
 
     def setup_routes(self):
         self.app.route('/stays', method='GET', callback=self.list_stays)
-        self.app.route('/stays/add', method=['GET', 'POST'], callback=self.add_stay)
+        self.app.route('/stays/add', method=['GET', 'POST'], callback=login_required(self.add_stay))
         self.app.route('/stays/edit/<stay_id:int>', method=['GET', 'POST'],
-                       callback=self.edit_stay)
+                       callback=login_required(self.edit_stay))
         self.app.route('/stays/delete/<stay_id:int>', method='POST',
                        callback=self.delete_stay)
         self.app.route('/stays/<stay_id:int>', method='GET',
@@ -61,6 +62,7 @@ class StayController(BaseController):
         )
 
     def add_stay(self):
+        
         if request.method == 'GET':
             features = self.feature_service.get_all()
             return self.render(
@@ -71,8 +73,8 @@ class StayController(BaseController):
             )
         else:
             host_id = int(request.forms.get('host_id') or 1)
-            self.stay_service.save(host_id)
-            self.redirect('/stays')
+            self.stay_service.save(get_current_user_id())
+            self.redirect('/stays?msg=Stay+criada+com+sucesso')
 
     def edit_stay(self, stay_id):
         stay = self.stay_service.get_by_id(stay_id)
