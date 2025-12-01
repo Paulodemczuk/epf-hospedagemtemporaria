@@ -20,12 +20,18 @@ class StayService:
         self._reload()
         return self.model.get_all()
 
-    def search(self, city: Optional[str] = None) -> List[Stay]:
+    def search(self, city: Optional[str] = None, feature_ids: Optional[list[int]] = None) -> List[Stay]:
         self._reload()
         stays = self.model.get_all()
         if city:
             city_lower = city.lower()
             stays = [s for s in stays if s.city.lower().startswith(city_lower)]
+
+        if feature_ids:
+            feature_ids_set = set(feature_ids)
+            stays = [s for s in stays if feature_ids_set.issubset(set(s.features_ids))
+        ]
+
         return stays
 
     def get_by_id(self, stay_id: int) -> Optional[Stay]:

@@ -30,7 +30,13 @@ class StayController(BaseController):
 
     def list_stays(self):
         city = request.query.get('city')
-        stays = self.stay_service.search(city=city)
+
+        feature_ids_raw = request.query.getall('features_ids')
+        feature_ids = [int(f) for f in feature_ids_raw] if feature_ids_raw else []
+
+        rating_ranges = request.query.getall('rating_range')
+
+        stays = self.stay_service.search(city=city, feature_ids=feature_ids)
 
         ratings_by_stay = {}
         acceptance_by_stay = {}
@@ -39,30 +45,42 @@ class StayController(BaseController):
             reviews = self.review_service.get_by_stay(stay.id)
             if reviews:
                 avg = sum(r.rating for r in reviews) / len(reviews)
-                if avg.is_integer():
-                    ratings_by_stay[stay.id] = int(avg)
-                else:
-                    ratings_by_stay[stay.id] = round(avg, 1)
+                ratings_by_stay[stay.id] = int(avg) if avg.is_integer() else round(avg, 1)
 
                 total = len(reviews)
-                recomendam = sum(
-                    1 for r in reviews if getattr(r, 'recomenda', True)
-                )
+                recomendam = sum(1 for r in reviews if getattr(r, 'recomenda', True))
                 acceptance = (recomendam / total) * 100
-                if acceptance.is_integer():
-                    acceptance_by_stay[stay.id] = int(acceptance)
-                else:
-                    acceptance_by_stay[stay.id] = round(acceptance, 1)
+                acceptance_by_stay[stay.id] = int(acceptance) if acceptance.is_integer() else round(acceptance, 1)
             else:
                 ratings_by_stay[stay.id] = None
                 acceptance_by_stay[stay.id] = None
+
+        if rating_ranges:
+            def in_any_range(stay_id):
+                rating = ratings_by_stay.get(stay_id)
+                if rating is None:
+                    return False
+                for r in rating_ranges:
+                    low_str, high_str = r.split('-')
+                    low = float(low_str)
+                    high = float(high_str)
+                    if low <= rating <= high:
+                        return True
+                return False
+            
+            stays = [s for s in stays if in_any_range(s.id)]
+
+        all_features = self.feature_service.get_all()
 
         return self.render(
             'stays',
             stays=stays,
             city=city,
             ratings_by_stay=ratings_by_stay,
-            acceptance_by_stay=acceptance_by_stay
+            acceptance_by_stay=acceptance_by_stay,
+            all_features=all_features, 
+            selected_features=feature_ids,
+            selected_rating_ranges=rating_ranges
         )
 
     def add_stay(self):

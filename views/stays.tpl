@@ -15,8 +15,55 @@
 <form method="get" action="/stays">
     % if not (defined('my_stays') and my_stays):
         <label for="city">Filtrar por cidade:</label>
-        <input type="text" id="city" name="city" value="{{city or ''}}">
+        <input type="text" id="city" name="city" value="{{city or ''}}"><br><br>
+
+        <h4>Filtrar por comodidades:</h4>
+        % selected_feats = set(selected_features) if defined('selected_features') else set()
+        % if defined('all_features'):
+            % for f in all_features:
+                <label>
+                    <input type="checkbox" name="features_ids" value="{{f.id}}"
+                           {{'checked' if f.id in selected_feats else ''}}>
+                    {{f.name}}
+                </label><br>
+            % end
+        % end
+
+        <h4>Filtrar por nota:</h4>
+        % selected_ranges = set(selected_rating_ranges) if defined('selected_rating_ranges') else set()
+        <label>
+            <input type="checkbox" name="rating_range" value="0-1"
+                   {{'checked' if '0-1' in selected_ranges else ''}}>
+            0 a 1 estrela
+        </label><br>
+        <label>
+            <input type="checkbox" name="rating_range" value="1-2"
+                   {{'checked' if '1-2' in selected_ranges else ''}}>
+            1 a 2 estrelas
+        </label><br>
+        <label>
+            <input type="checkbox" name="rating_range" value="2-3"
+                   {{'checked' if '2-3' in selected_ranges else ''}}>
+            2 a 3 estrelas
+        </label><br>
+        <label>
+            <input type="checkbox" name="rating_range" value="3-4"
+                   {{'checked' if '3-4' in selected_ranges else ''}}>
+            3 a 4 estrelas
+        </label><br>
+        <label>
+            <input type="checkbox" name="rating_range" value="4-5"
+                   {{'checked' if '4-5' in selected_ranges else ''}}>
+            4 a 5 estrelas
+        </label><br>
+        <label>
+            <input type="checkbox" name="rating_range" value="5-5"
+                   {{'checked' if '5-5' in selected_ranges else ''}}>
+            Apenas 5 estrelas
+        </label><br><br>
+
         <button type="submit">Buscar</button>
+        <a href="/stays" style="margin-left: 10px;">Limpar filtros</a>
     % end
 </form>
 
@@ -25,7 +72,8 @@
     % media = ratings_by_stay.get(stay.id) if defined('ratings_by_stay') else None
     % taxa = acceptance_by_stay.get(stay.id) if defined('acceptance_by_stay') else None
     <li>
-        <img src="/static/img/stays/{{stay.image_filename}}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; float: left; margin-right: 15px;">
+        <img src="/static/img/stays/{{stay.image_filename}}"
+             style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; float: left; margin-right: 15px;">
 
         <strong>{{stay.title}}</strong> - {{stay.city}} - R$ {{stay.price_per_night}} / noite
         <br>
