@@ -18,6 +18,8 @@
     % media = ratings_by_stay.get(stay.id) if defined('ratings_by_stay') else None
     % taxa = acceptance_by_stay.get(stay.id) if defined('acceptance_by_stay') else None
     <li>
+        <img src="/static/img/stays/{{stay.image_filename}}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 5px; float: left; margin-right: 15px;">
+
         <strong>{{stay.title}}</strong> - {{stay.city}} - R$ {{stay.price_per_night}} / noite
         <br>
         Máx hóspedes: {{stay.max_guests}}
@@ -56,5 +58,6 @@
             <button type="submit">Favorito</button>
         </form>
     </li>
+    <br>
 % end
 </ul>
