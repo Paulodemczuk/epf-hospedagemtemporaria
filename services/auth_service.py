@@ -6,6 +6,7 @@ class AuthService:
         self.user_model = UserModel()
 
     def login(self, email,password_input):
+        self.user_model = UserModel()
         users = self.user_model.get_all()
         password_hash = to_hash(password_input)
         for user in users:
