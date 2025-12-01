@@ -6,6 +6,7 @@ from controllers.review_controller import review_routes
 from controllers.feature_controller import feature_routes
 from controllers.favorite_controller import favorite_routes
 from controllers.login_controller import login_routes
+from controllers.admin_controller import admin_routes
 
 
 def init_controllers(app: Bottle):
@@ -17,3 +18,4 @@ def init_controllers(app: Bottle):
     app.mount('/', review_routes)
     app.mount('/', feature_routes)
     app.mount('/', favorite_routes)
+    app.mount('/', admin_routes)

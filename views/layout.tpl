@@ -13,10 +13,20 @@
 
 <nav>
     <a href="/stays">Stays</a>
+    <a href="/my-stays">Meus Stays</a>
     <a href="/favorites">Favoritos</a>
     <a href="/bookings">Reservas</a>
-    <a href="/login">Login</a>
-    <a href="/logout">Logout</a>
+
+    % if defined('current_user') and current_user and getattr(current_user, 'role', 'user') == 'admin':
+        <a href="/admin">Admin</a>
+    % end
+
+    % if defined('current_user') and current_user:
+        <span>Olá, {{current_user.name}}</span>
+        <a href="/logout">Logout</a>
+    % else:
+        <a href="/login">Login</a>
+    % end
 </nav>
 
 <hr>

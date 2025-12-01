@@ -1,16 +1,23 @@
 % rebase('layout', title='Stays')
 
-<h1>Stays</h1>
+<h1>{{'Meus stays' if defined('my_stays') and my_stays else 'Stays'}}</h1>
 
 <p>
-    <a href="/stays/add">Cadastrar nova stay</a></p>
+    % if defined('my_stays') and my_stays:
+        <a href="/stays">Procurar stays</a> |
+    % else:
+        <a href="/my-stays">Meus stays</a> |
+    % end
+    <a href="/stays/add">Cadastrar nova stay</a> |
     <a href="/favorites">Ver favoritos</a>
 </p>
 
 <form method="get" action="/stays">
-    <label for="city">Filtrar por cidade:</label>
-    <input type="text" id="city" name="city" value="{{city or ''}}">
-    <button type="submit">Buscar</button>
+    % if not (defined('my_stays') and my_stays):
+        <label for="city">Filtrar por cidade:</label>
+        <input type="text" id="city" name="city" value="{{city or ''}}">
+        <button type="submit">Buscar</button>
+    % end
 </form>
 
 <ul>
@@ -37,8 +44,7 @@
         % end
         <br>
 
-         <a href="/stays/{{stay.id}}">Exibir informações</a>
-        |
+        <a href="/stays/{{stay.id}}">Exibir informações</a> |
 
         <a href="/stays/edit/{{stay.id}}">Editar</a>
         <form action="/stays/delete/{{stay.id}}" method="post" style="display:inline;">
@@ -54,10 +60,9 @@
         </form>
 
         <form action="/stays/{{stay.id}}/favorite" method="post" style="display:inline;">
-            <input type="hidden" name="user_id" value="1">
             <button type="submit">Favorito</button>
         </form>
     </li>
-    <br>
+    <br style="clear: both;">
 % end
 </ul>

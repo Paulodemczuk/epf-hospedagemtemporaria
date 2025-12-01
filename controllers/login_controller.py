@@ -23,8 +23,11 @@ class LoginController(BaseController):
         user = self.auth_service.login(email, password)
 
         if user:
-            response.set_cookie("user_session", str(user.id), secret=Config.SECRET_KEY, path='/')
-            redirect('/users?msg=Login+realizado+com+sucesso!')
+            response.set_cookie("user_session", str(user.id),secret=Config.SECRET_KEY, path='/')
+            if getattr(user, "role", "user") == "admin":
+                redirect('/admin')
+            else:
+                redirect('/stays')
         else:
             return self.render('login_form', error="Email ou senha inválidos")
 

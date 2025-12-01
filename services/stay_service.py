@@ -108,3 +108,10 @@ class StayService:
         self._reload()
         stays = self.model.get_all()
         return [s for s in stays if s.host_id == host_id]
+
+    def delete_by_host(self, host_id: int):
+        self._reload()
+        stays = self.model.get_all()
+        stays_to_keep = [s for s in stays if s.host_id != host_id]
+        self.model.stays = stays_to_keep
+        self.model._save()

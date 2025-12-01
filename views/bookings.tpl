@@ -1,13 +1,16 @@
 % rebase('layout', title='Reservas')
 
-<h1>Reservas</h1>
+<h1>Minhas Reservas</h1>
+
+% if defined('user') and user:
+    <p>Usuário: {{user.name}}</p>
+% end
 
 <p><a href="/stays">Voltar para Stays</a></p>
 
 <ul>
 % for b in bookings:
     % stay = stay_by_id.get(b.stay_id)
-    % user = user_by_id.get(b.guest_id)
     <li>
         Reserva {{b.id}} – {{stay.title if stay else 'Stay ' + str(b.stay_id)}} –
         Hóspede: {{user.name if user else 'Usuário ' + str(b.guest_id)}} –

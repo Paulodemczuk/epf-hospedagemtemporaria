@@ -1,10 +1,14 @@
 from bottle import request
 from models.user import UserModel, User
 from utils import to_hash
+from services.booking_service import BookingService
+from services.stay_service import StayService
 
 class UserService:
     def __init__(self):
         self.user_model = UserModel()
+        self.booking_service = BookingService()
+        self.stay_service = StayService()
 
 
     def get_all(self):
@@ -48,4 +52,6 @@ class UserService:
 
 
     def delete_user(self, user_id):
+        self.booking_service.delete_by_user(user_id)
+        self.stay_service.delete_by_host(user_id)
         self.user_model.delete_user(user_id)

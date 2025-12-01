@@ -1,4 +1,5 @@
 from bottle import static_file
+from utils import get_current_user
 
 class BaseController:
     def __init__(self, app):
@@ -29,10 +30,12 @@ class BaseController:
         return static_file(filename, root='./static')
 
 
-    def render(self, template, **context):
+    def render(self, template_name, **kwargs):
         """Método auxiliar para renderizar templates"""
-        from bottle import template as render_template
-        return render_template(template, **context)
+        from bottle import template
+        current_user = get_current_user()
+        kwargs['current_user'] = current_user
+        return template(template_name, **kwargs)
 
 
     def redirect(self, path, code=302):

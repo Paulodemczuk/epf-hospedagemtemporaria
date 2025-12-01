@@ -119,3 +119,9 @@ class BookingService:
                 return True
 
         return False
+    
+    def delete_by_user(self, user_id: int):
+        bookings = self.model.get_all()
+        to_keep = [b for b in bookings if b.guest_id != user_id]
+        self.model.bookings = to_keep
+        self.model._save()
