@@ -1,5 +1,6 @@
 from bottle import request
 from models.user import UserModel, User
+from utils import to_hash
 
 class UserService:
     def __init__(self):
@@ -18,7 +19,10 @@ class UserService:
         email = request.forms.get('email')
         birthdate = request.forms.get('birthdate')
 
-        user = User(id=new_id, name=name, email=email, birthdate=birthdate)
+        password_raw = request.forms.get('password')
+        password_hash = to_hash(password_raw)
+
+        user = User(id=new_id, name=name, email=email, birthdate=birthdate, password=password_hash)
         self.user_model.add_user(user)
 
 
@@ -30,6 +34,11 @@ class UserService:
         name = request.forms.get('name')
         email = request.forms.get('email')
         birthdate = request.forms.get('birthdate')
+        password = request.forms.get('password')
+
+        if password:
+            from utils import to_hash
+            user.password = to_hash(password)
 
         user.name = name
         user.email = email
