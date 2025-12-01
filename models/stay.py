@@ -6,7 +6,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
 
 class Stay:
     def __init__(self, id, title, city, price_per_night, max_guests,
-                 host_id, features_ids=None):
+                 host_id, features_ids=None, image_filename=None):
         self.id = id
         self.title = title
         self.city = city
@@ -14,6 +14,7 @@ class Stay:
         self.max_guests = int(max_guests)
         self.host_id = host_id
         self.features_ids = features_ids or []
+        self.image_filename = image_filename or 'default.jpg'
 
     def to_dict(self):
         return {
@@ -23,7 +24,8 @@ class Stay:
             'price_per_night': self.price_per_night,
             'max_guests': self.max_guests,
             'host_id': self.host_id,
-            'features_ids': self.features_ids
+            'features_ids': self.features_ids,
+            'image_filename': self.image_filename
         }
 
     @classmethod
@@ -35,7 +37,8 @@ class Stay:
             price_per_night=data['price_per_night'],
             max_guests=data['max_guests'],
             host_id=data['host_id'],
-            features_ids=data.get('features_ids', [])
+            features_ids=data.get('features_ids', []),
+            image_filename=data.get('image_filename', 'default.jpg')
         )
 
 
