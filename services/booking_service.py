@@ -1,8 +1,9 @@
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, date
 from bottle import request
 from models.booking import BookingModel, Booking
 from models.stay import StayModel
+
 
 
 class BookingService:
@@ -37,6 +38,30 @@ class BookingService:
         form = request.forms
         check_in = form.get('check_in')
         check_out = form.get('check_out')
+        guest_count = int(form.get('guests_count') or 1)
+
+        try: 
+            dt_in = datetime.strptime(check_in, "%Y-%m-%d")
+            dt_out = datetime.strptime(check_out, "%Y-%m-%d")
+        except (TypeError, ValueError):
+            return "Datas inválidas"
+        
+        if dt_in >= dt_out:
+            return "Data de check-out deve ser após a data de check-in"
+        
+        today = date.today()
+        if dt_in.date() <= today:
+            return "Data de check-in deve ser futura"
+        
+        stay = self.stay_model.get_by_id(stay_id)
+        if not stay:
+            return "Stay não encontrada"
+        
+        if guest_count > stay.max_guests:
+            return f"Número de hóspedes excede o máximo permitido (máximo {stay.max_guests})"
+
+        if self._has_conflict(stay_id, check_in, check_out):
+            return "Conflito de reserva para esse período"
 
         total = self._calc_total_price(stay_id, check_in, check_out)
 
@@ -53,6 +78,13 @@ class BookingService:
 
     def edit_booking(self, booking: Booking):
         form = request.forms
+        new_check_in = form.get('check_in')
+        new_check_out = form.get('check_out')
+
+        if self._has_conflict(booking.stay_id, new_check_in, new_check_out, ignore_booking_id=booking.id):
+            return "Conflito de reserva para esse período"
+
+
         booking.check_in = form.get('check_in')
         booking.check_out = form.get('check_out')
         booking.total_price = self._calc_total_price(
@@ -65,3 +97,21 @@ class BookingService:
 
     def delete_booking(self, booking_id: int):
         self.model.delete_booking(booking_id)
+
+    def _has_conflict(self, stay_id: int, check_in: str, check_out: str, ignore_booking_id: int | None = None) -> bool:
+        dt_in = datetime.strptime(check_in, "%Y-%m-%d")
+        dt_out = datetime.strptime(check_out, "%Y-%m-%d")
+
+        for b in self.model.get_all():
+            if b.stay_id != stay_id:
+                continue
+            if ignore_booking_id is not None and b.id == ignore_booking_id:
+                continue
+
+            other_in = datetime.strptime(b.check_in, "%Y-%m-%d")
+            other_out = datetime.strptime(b.check_out, "%Y-%m-%d")
+
+            if dt_in < other_out and other_in < dt_out:
+                return True
+
+        return False

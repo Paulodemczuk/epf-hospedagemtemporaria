@@ -35,7 +35,9 @@ class BookingController(BaseController):
             )
         else:
             guest_id = int(request.forms.get('guest_id') or 1)
-            self.booking_service.save(stay_id, guest_id)
+            result = self.booking_service.save(stay_id, guest_id)
+            if isinstance(result, str):
+                return result
             self.redirect('/bookings')
 
     def edit_booking(self, booking_id):
