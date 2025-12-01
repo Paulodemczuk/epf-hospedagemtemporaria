@@ -2,6 +2,7 @@ from bottle import Bottle, request
 from .base_controller import BaseController
 from services.stay_service import StayService
 from models.stay import Stay
+from services.review_service import ReviewService
 
 
 
@@ -9,6 +10,7 @@ class StayController(BaseController):
     def __init__(self, app):
         super().__init__(app)
         self.stay_service = StayService()
+        self.review_service = ReviewService()
         self.setup_routes()
 
     def setup_routes(self):
@@ -20,7 +22,32 @@ class StayController(BaseController):
     def list_stays(self):
         city = request.query.get('city')  
         stays = self.stay_service.search(city=city)
-        return self.render('stays', stays=stays, city=city)
+
+        ratings_by_stay = {}
+        acceptance_by_stay = {}
+
+        for stay in stays:
+            reviews = self.review_service.get_by_stay(stay.id)
+            if reviews:
+                avg = sum(r.rating for r in reviews) / len(reviews)
+                if avg.is_integer():
+                    ratings_by_stay[stay.id] = int(avg)
+                else:
+                    ratings_by_stay[stay.id] = round(avg, 1)
+
+                total = len(reviews)
+                recomendam = sum(1 for r in reviews if getattr(r, 'recomenda', True))
+                acceptance = (recomendam / total) * 100
+
+                if acceptance.is_integer():
+                    acceptance_by_stay[stay.id] = int(acceptance)
+                else:
+                    acceptance_by_stay[stay.id] = round(acceptance, 1)
+            else:
+                ratings_by_stay[stay.id] = None
+                acceptance_by_stay[stay.id] = None
+
+        return self.render('stays', stays=stays, city=city, ratings_by_stay=ratings_by_stay, acceptance_by_stay=acceptance_by_stay)
 
 
     def add_stay(self):
