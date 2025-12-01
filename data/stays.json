@@ -1,0 +1,15 @@
+[
+    {
+        "id": 1,
+        "title": "Hotel Teste",
+        "city": "Test City",
+        "price_per_night": 125.99,
+        "max_guests": 4,
+        "host_id": 1,
+        "features_ids": [
+            1,
+            2
+        ],
+        "image_filename": "default.jpg"
+    }
+]
