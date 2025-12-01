@@ -27,8 +27,8 @@ class BookingService:
         if not stay:
             return 0.0
 
-        dt_in = datetime.strptime(check_in, "%d-%m-%Y")
-        dt_out = datetime.strptime(check_out, "%d-%m-%Y")
+        dt_in = datetime.strptime(check_in, "%Y-%m-%d")
+        dt_out = datetime.strptime(check_out, "%Y-%m-%d")
         nights = (dt_out - dt_in).days
         nights = max(nights, 1)
         return stay.price_per_night * nights

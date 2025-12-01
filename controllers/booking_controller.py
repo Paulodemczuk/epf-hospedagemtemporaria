@@ -1,12 +1,14 @@
 from bottle import Bottle, request
 from .base_controller import BaseController
 from services.booking_service import BookingService
+from models.stay import StayModel
 
 
 class BookingController(BaseController):
     def __init__(self, app):
         super().__init__(app)
         self.booking_service = BookingService()
+        self.stay_model = StayModel()
         self.setup_routes()
 
     def setup_routes(self):
@@ -17,14 +19,18 @@ class BookingController(BaseController):
 
     def list_bookings(self):
         bookings = self.booking_service.get_all()
-        return self.render('bookings', bookings=bookings)
+        stays = self.stay_model.get_all()
+        stay_by_id = {s.id: s for s in stays}
+        return self.render('bookings', bookings=bookings, stay_by_id=stay_by_id)
 
     def add_booking(self, stay_id):
         if request.method == 'GET':
+            stay = self.stay_model.get_by_id(stay_id)
             return self.render(
                 'booking_form',
                 booking=None,
                 stay_id=stay_id,
+                stay=stay,
                 action=f"/bookings/add/{stay_id}"
             )
         else:
@@ -38,10 +44,12 @@ class BookingController(BaseController):
             return "Reserva não encontrada"
 
         if request.method == 'GET':
+            stay = self.stay_model.get_by_id(booking.stay_id)
             return self.render(
                 'booking_form',
                 booking=booking,
                 stay_id=booking.stay_id,
+                stay=stay,
                 action=f"/bookings/edit/{booking_id}"
             )
         else:

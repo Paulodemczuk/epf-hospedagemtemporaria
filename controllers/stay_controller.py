@@ -1,6 +1,8 @@
 from bottle import Bottle, request
 from .base_controller import BaseController
 from services.stay_service import StayService
+from models.stay import Stay
+
 
 
 class StayController(BaseController):

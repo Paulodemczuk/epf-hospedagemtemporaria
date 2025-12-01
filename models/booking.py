@@ -6,9 +6,9 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
 
 
 class Booking:
-    def __init__(self, id, listing_id, guest_id, check_in, check_out, total_price, status="confirmed"):
+    def __init__(self, id, stay_id, guest_id, check_in, check_out, total_price, status="confirmed"):
         self.id = id
-        self.listing_id = listing_id
+        self.stay_id = stay_id
         self.guest_id = guest_id
         self.check_in = check_in
         self.check_out = check_out
@@ -25,7 +25,7 @@ class Booking:
     def to_dict(self):
         return {
             'id': self.id,
-            'listing_id': self.listing_id,
+            'stay_id': self.stay_id,
             'guest_id': self.guest_id,
             'check_in': self.check_in,
             'check_out': self.check_out,
@@ -37,7 +37,7 @@ class Booking:
     def from_dict(cls, data):
         return cls(
             id=data['id'],
-            listing_id=data['listing_id'],
+            stay_id=data['stay_id'],
             guest_id=data['guest_id'],
             check_in=data['check_in'],
             check_out=data['check_out'],
