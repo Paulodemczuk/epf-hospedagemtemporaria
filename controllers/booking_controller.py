@@ -2,7 +2,8 @@ from bottle import Bottle, request
 from .base_controller import BaseController
 from services.booking_service import BookingService
 from models.stay import StayModel
-from utils import login_required
+from utils import login_required, get_current_user_id
+from models.user import UserModel
 
 
 class BookingController(BaseController):
@@ -10,6 +11,7 @@ class BookingController(BaseController):
         super().__init__(app)
         self.booking_service = BookingService()
         self.stay_model = StayModel()
+        self.user_model = UserModel()
         self.setup_routes()
 
     def setup_routes(self):
@@ -22,7 +24,9 @@ class BookingController(BaseController):
         bookings = self.booking_service.get_all()
         stays = self.stay_model.get_all()
         stay_by_id = {s.id: s for s in stays}
-        return self.render('bookings', bookings=bookings, stay_by_id=stay_by_id)
+        users = self.user_model.get_all()
+        user_by_id = {u.id: u for u in users}
+        return self.render('bookings', bookings=bookings, stay_by_id=stay_by_id, user_by_id=user_by_id)
 
     def add_booking(self, stay_id):
         if request.method == 'GET':
@@ -35,7 +39,7 @@ class BookingController(BaseController):
                 action=f"/bookings/add/{stay_id}"
             )
         else:
-            guest_id = int(request.forms.get('guest_id') or 1)
+            guest_id = get_current_user_id()
             result = self.booking_service.save(stay_id, guest_id)
             if isinstance(result, str):
                 return result
