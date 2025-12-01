@@ -6,6 +6,7 @@ from utils import login_required, get_current_user_id
 from models.user import UserModel
 
 
+
 class BookingController(BaseController):
     def __init__(self, app):
         super().__init__(app)
@@ -15,18 +16,21 @@ class BookingController(BaseController):
         self.setup_routes()
 
     def setup_routes(self):
-        self.app.route('/bookings', method='GET', callback=self.list_bookings)
+        self.app.route('/bookings', method='GET', callback=login_required(self.list_bookings))
         self.app.route('/bookings/add/<stay_id:int>', method=['GET', 'POST'], callback=login_required(self.add_booking))
         self.app.route('/bookings/edit/<booking_id:int>', method=['GET', 'POST'], callback=login_required(self.edit_booking))
         self.app.route('/bookings/delete/<booking_id:int>', method='POST', callback=self.delete_booking)
 
     def list_bookings(self):
-        bookings = self.booking_service.get_all()
+        user_id = get_current_user_id()
+        bookings = self.booking_service.get_by_user(user_id)
+
         stays = self.stay_model.get_all()
         stay_by_id = {s.id: s for s in stays}
-        users = self.user_model.get_all()
-        user_by_id = {u.id: u for u in users}
-        return self.render('bookings', bookings=bookings, stay_by_id=stay_by_id, user_by_id=user_by_id)
+        user = self.user_model.get_by_id(user_id)
+
+
+        return self.render('bookings', bookings=bookings, stay_by_id=stay_by_id, user=user)
 
     def add_booking(self, stay_id):
         if request.method == 'GET':

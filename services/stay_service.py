@@ -103,3 +103,8 @@ class StayService:
 
         file_upload.save(save_path, overwrite=True)
         return filename
+    
+    def get_by_host(self, host_id: int) -> List[Stay]:
+        self._reload()
+        stays = self.model.get_all()
+        return [s for s in stays if s.host_id == host_id]

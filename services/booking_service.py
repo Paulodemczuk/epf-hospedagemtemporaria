@@ -16,6 +16,10 @@ class BookingService:
 
     def get_by_id(self, booking_id: int) -> Optional[Booking]:
         return self.model.get_by_id(booking_id)
+    
+    def get_by_user(self, user_id: int):
+        bookings = self.model.get_all()
+        return [b for b in bookings if b.guest_id == user_id]
 
     def _next_id(self) -> int:
         bookings = self.model.get_all()

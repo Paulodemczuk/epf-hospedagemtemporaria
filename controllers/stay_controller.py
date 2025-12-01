@@ -4,6 +4,7 @@ from services.stay_service import StayService
 from services.review_service import ReviewService
 from services.feature_service import FeatureService
 from utils import login_required, get_current_user_id
+from models.user import UserModel
 
 
 class StayController(BaseController):
@@ -12,6 +13,7 @@ class StayController(BaseController):
         self.stay_service = StayService()
         self.review_service = ReviewService()
         self.feature_service = FeatureService()
+        self.user_model = UserModel()
         self.setup_routes()
 
     def setup_routes(self):
@@ -23,6 +25,8 @@ class StayController(BaseController):
                        callback=self.delete_stay)
         self.app.route('/stays/<stay_id:int>', method='GET',
                        callback=self.show_stay)
+        self.app.route('/my-stays', method='GET',
+                   callback=login_required(self.list_my_stays))
 
     def list_stays(self):
         city = request.query.get('city')
@@ -106,11 +110,52 @@ class StayController(BaseController):
         features_by_id = {f.id: f for f in all_features}
         stay_features = [features_by_id[fid] for fid in stay.features_ids
                          if fid in features_by_id]
+        
+        host = self.user_model.get_by_id(stay.host_id)
 
         return self.render(
             'stay_details',
             stay=stay,
-            features=stay_features
+            features=stay_features,
+            host=host
+        )
+    
+    def list_my_stays(self):
+        user_id = get_current_user_id()
+        stays = self.stay_service.get_by_host(user_id)
+        
+        ratings_by_stay = {}
+        acceptance_by_stay = {}
+
+        for stay in stays:
+            reviews = self.review_service.get_by_stay(stay.id)
+            if reviews:
+                avg = sum(r.rating for r in reviews) / len(reviews)
+                if avg.is_integer():
+                    ratings_by_stay[stay.id] = int(avg)
+                else:
+                    ratings_by_stay[stay.id] = round(avg, 1)
+
+                total = len(reviews)
+                recomendam = sum(
+                    1 for r in reviews if getattr(r, 'recomenda', True)
+                )
+                acceptance = (recomendam / total) * 100
+                if acceptance.is_integer():
+                    acceptance_by_stay[stay.id] = int(acceptance)
+                else:
+                    acceptance_by_stay[stay.id] = round(acceptance, 1)
+            else:
+                ratings_by_stay[stay.id] = None
+                acceptance_by_stay[stay.id] = None
+
+        return self.render(
+            'stays',
+            stays=stays,
+            city=None,
+            ratings_by_stay=ratings_by_stay,
+            acceptance_by_stay=acceptance_by_stay,
+            my_stays=True
         )
 
 
