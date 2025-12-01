@@ -2,7 +2,10 @@
 
 <h1>Stays</h1>
 
-<p><a href="/stays/add">Cadastrar nova stay</a></p>
+<p>
+    <a href="/stays/add">Cadastrar nova stay</a></p>
+    <a href="/favorites">Ver favoritos</a>
+</p>
 
 <form method="get" action="/stays">
     <label for="city">Filtrar por cidade:</label>
@@ -46,6 +49,11 @@
 
         <form action="/stays/{{stay.id}}/reviews" method="get" style="display:inline;">
             <button type="submit">Reviews</button>
+        </form>
+
+        <form action="/stays/{{stay.id}}/favorite" method="post" style="display:inline;">
+            <input type="hidden" name="user_id" value="1">
+            <button type="submit">Favorito</button>
         </form>
     </li>
 % end

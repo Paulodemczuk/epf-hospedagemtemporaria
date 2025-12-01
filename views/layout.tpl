@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Bottle - {{title or 'Sistema'}}</title>
-    <link rel="stylesheet" href="/static/css/style.css" />
+    <meta charset="utf-8">
+    <title>{{title or 'Hospedagem Temporária'}}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        nav a { margin-right: 10px; }
+        h1 { margin-top: 0; }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        {{!base}}  <!-- O conteúdo das páginas filhas virá aqui -->
-    </div>
+<nav>
+    <a href="/stays">Stays</a>
+    <a href="/favorites">Favoritos</a>
+    <a href="/bookings">Reservas</a>
+</nav>
 
-    <footer>
-        <p>&copy; 2025, Meu Projeto. Todos os direitos reservados.</p>
-    </footer>
+<hr>
 
-    <!-- Scripts JS no final do body -->
-    <script src="/static/js/main.js"></script>
+{{!base}}
+
 </body>
 </html>
