@@ -1,33 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>{{'Editar' if stay else 'Nova'}} Stay</title>
-</head>
-<body>
-    <h1>{{'Editar' if stay else 'Nova'}} Stay</h1>
+% rebase('layout', title='Stay')
 
-    <form method="post" action="{{action}}">
-        <label for="title">Título:</label><br>
-        <input type="text" id="title" name="title" value="{{stay.title if stay else ''}}" required><br><br>
+<h1>{{'Editar stay' if stay else 'Nova stay'}}</h1>
 
-        <label for="description">Descrição:</label><br>
-        <textarea id="description" name="description">{{stay.description if stay else ''}}</textarea><br><br>
+<form method="post" action="{{action}}">
+    <label for="title">Título:</label><br>
+    <input type="text" id="title" name="title"
+           value="{{stay.title if stay else ''}}" required><br><br>
 
-        <label for="city">Cidade:</label><br>
-        <input type="text" id="city" name="city" value="{{stay.city if stay else ''}}" required><br><br>
+    <label for="city">Cidade:</label><br>
+    <input type="text" id="city" name="city"
+           value="{{stay.city if stay else ''}}" required><br><br>
 
-        <label for="price_per_night">Preço por noite:</label><br>
-        <input type="number" step="0.01" id="price_per_night" name="price_per_night"
-               value="{{stay.price_per_night if stay else ''}}" required><br><br>
+    <label for="price_per_night">Preço por noite:</label><br>
+    <input type="number" step="0.01" id="price_per_night" name="price_per_night"
+           value="{{stay.price_per_night if stay else ''}}" required><br><br>
 
-        <label for="max_guests">Máx. hóspedes:</label><br>
-        <input type="number" id="max_guests" name="max_guests"
-               value="{{stay.max_guests if stay else ''}}" required><br><br>
+    <label for="max_guests">Máx hóspedes:</label><br>
+    <input type="number" id="max_guests" name="max_guests" min="1"
+           value="{{stay.max_guests if stay else '1'}}" required><br><br>
 
-        <button type="submit">Salvar</button>
-    </form>
+    <label for="host_id">Host ID:</label><br>
+    <input type="number" id="host_id" name="host_id"
+           value="{{stay.host_id if stay else '1'}}"><br><br>
 
-    <p><a href="/stays">Voltar</a></p>
-</body>
-</html>
+    <h3>Comodidades / Tipo</h3>
+    % selected = set(stay.features_ids) if stay else set()
+    % for f in features:
+        <label>
+            <input type="checkbox" name="features_ids" value="{{f.id}}"
+                {{'checked' if f.id in selected else ''}}>
+            {{f.name}}
+        </label><br>
+    % end
+
+    <br>
+    <button type="submit">Salvar</button>
+    <a href="/stays">Voltar</a>
+</form>

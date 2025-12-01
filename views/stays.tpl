@@ -32,6 +32,9 @@
         % end
         <br>
 
+         <a href="/stays/{{stay.id}}">Exibir informações</a>
+        |
+
         <a href="/stays/edit/{{stay.id}}">Editar</a>
         <form action="/stays/delete/{{stay.id}}" method="post" style="display:inline;">
             <button type="submit">Excluir</button>

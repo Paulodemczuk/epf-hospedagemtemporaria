@@ -13,7 +13,6 @@ class Stay:
         self.price_per_night = float(price_per_night)
         self.max_guests = int(max_guests)
         self.host_id = host_id
-        # lista de IDs de Feature (comodidades)
         self.features_ids = features_ids or []
 
     def to_dict(self):

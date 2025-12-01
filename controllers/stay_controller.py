@@ -33,14 +33,12 @@ class StayController(BaseController):
         for stay in stays:
             reviews = self.review_service.get_by_stay(stay.id)
             if reviews:
-                # média das notas
                 avg = sum(r.rating for r in reviews) / len(reviews)
                 if avg.is_integer():
                     ratings_by_stay[stay.id] = int(avg)
                 else:
                     ratings_by_stay[stay.id] = round(avg, 1)
 
-                # taxa de aceitação (% recomenda=True)
                 total = len(reviews)
                 recomendam = sum(
                     1 for r in reviews if getattr(r, 'recomenda', True)

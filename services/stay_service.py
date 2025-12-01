@@ -39,8 +39,7 @@ class StayService:
         city = form.get('city')
         price_per_night = form.get('price_per_night')
         max_guests = form.get('max_guests')
-
-        # checkboxes de features
+        
         features_raw = request.forms.getall('features_ids')
         features_ids = [int(f) for f in features_raw]
 
