@@ -12,19 +12,37 @@
 
 <ul>
 % for stay in stays:
+    % media = ratings_by_stay.get(stay.id) if defined('ratings_by_stay') else None
+    % taxa = acceptance_by_stay.get(stay.id) if defined('acceptance_by_stay') else None
     <li>
         <strong>{{stay.title}}</strong> - {{stay.city}} - R$ {{stay.price_per_night}} / noite
         <br>
         Máx hóspedes: {{stay.max_guests}}
         <br>
+        % if media is not None:
+            Nota média: {{media}} / 5
+        % else:
+            Nota média: (sem reviews)
+        % end
+        <br>
+        % if taxa is not None:
+            Taxa de aceitação: {{taxa}}%
+        % else:
+            Taxa de aceitação: (sem dados)
+        % end
+        <br>
+
         <a href="/stays/edit/{{stay.id}}">Editar</a>
         <form action="/stays/delete/{{stay.id}}" method="post" style="display:inline;">
             <button type="submit">Excluir</button>
         </form>
 
-        <!-- Botão para reservar (alugar) esta stay -->
         <form action="/bookings/add/{{stay.id}}" method="get" style="display:inline;">
             <button type="submit">Alugar</button>
+        </form>
+
+        <form action="/stays/{{stay.id}}/reviews" method="get" style="display:inline;">
+            <button type="submit">Reviews</button>
         </form>
     </li>
 % end
