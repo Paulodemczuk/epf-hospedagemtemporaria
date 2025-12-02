@@ -8,7 +8,7 @@
     <ul>
     % for stay in favorite_stays:
         <li>
-            <strong>{{stay.title}}</strong> - {{stay.city}} - R$ {{stay.price_per_night}} / noite
+            <strong>{{stay.title}}</strong> - {{stay.city}} - R$ {{f"{stay.price_per_night:.2f}"}} / noite
             <br>
             Máx hóspedes: {{stay.max_guests}}
             <br>

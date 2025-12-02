@@ -3,7 +3,7 @@
 <h1>{{stay.title}}</h1>
 
 <p>Cidade: {{stay.city}}</p>
-<p>Preço por noite: R$ {{stay.price_per_night}}</p>
+<p>Preço por noite: R$ {{f"{stay.price_per_night:.2f}"}}</p>
 <p>Máx hóspedes: {{stay.max_guests}}</p>
 <p>Anfitrião: </b> {{host.name if host else 'Desconhecido'}}</p>
 

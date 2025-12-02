@@ -277,7 +277,7 @@
             <div class="stay-right">
                 <div class="stay-info">
                     <div class="stay-title">{{stay.title}}</div>
-                    <div class="stay-meta">{{stay.city}} -  R$ {{stay.price_per_night}} / noite</div>
+                    <div class="stay-meta">{{stay.city}} -  R$ {{f"{stay.price_per_night:.2f}"}} / noite</div>
                     <div class="stay-meta">Máx hóspedes: {{stay.max_guests}}</div>
 
                     <div class="stay-rating">

@@ -107,7 +107,7 @@
   <div class="reviews-header">
       <h1>Reviews de {{stay.title}}</h1>
       <p class="reviews-summary">
-          Média: {{(sum(r.rating for r in reviews) / len(reviews)) if reviews else '—'}} / 5 - {{len(reviews)}} review(s)
+          Média: {{f"{(sum(r.rating for r in reviews) / len(reviews)):.2f}" if reviews else '—'}} / 5 - {{len(reviews)}} review(s)
       </p>
       <p>
           <a href="/stays/{{stay.id}}">Voltar para a stay</a> |

@@ -14,7 +14,7 @@
     <li>
         Reserva {{b.id}} – {{stay.title if stay else 'Stay ' + str(b.stay_id)}} –
         Hóspede: {{user.name if user else 'Usuário ' + str(b.guest_id)}} –
-        {{b.check_in}} até {{b.check_out}} – Total: R$ {{b.total_price}} –
+        {{b.check_in}} até {{b.check_out}} – Total: R$ {{f"{b.total_price:.2f}"}} –
         Status: {{b.status}}
         <br>
         <a href="/bookings/edit/{{b.id}}">Editar</a>
