@@ -19,6 +19,7 @@
         text-decoration: none;
         color: #2f1c6a;
         font-weight: bold;
+        font-size: 20px
     }
     .filter-box {
         background: #fafbff;
