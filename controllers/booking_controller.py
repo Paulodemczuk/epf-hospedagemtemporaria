@@ -2,7 +2,7 @@ from bottle import Bottle, request
 from .base_controller import BaseController
 from services.booking_service import BookingService
 from models.stay import StayModel
-from utils import login_required, get_current_user_id
+from utils import get_current_user, login_required, get_current_user_id
 from models.user import UserModel
 
 
@@ -68,6 +68,11 @@ class BookingController(BaseController):
             )
         else:
             self.booking_service.edit_booking(booking)
+        
+        current = get_current_user()
+        if current and getattr(current, 'role', 'user') == 'admin':
+            self.redirect('/admin/bookings')
+        else:
             self.redirect('/bookings')
 
     def delete_booking(self, booking_id):

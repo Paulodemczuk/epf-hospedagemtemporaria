@@ -1,6 +1,7 @@
 from bottle import Bottle, request
 from .base_controller import BaseController
 from services.user_service import UserService
+from utils import get_current_user
 
 class UserController(BaseController):
     def __init__(self, app):
@@ -35,7 +36,13 @@ class UserController(BaseController):
         else:
             # POST - salvar edição
             self.user_service.edit_user(user)
+        
+        current = get_current_user()
+        if current and getattr(current, 'role', 'user') == 'admin':
+            self.redirect('/admin/users')
+        else:
             self.redirect('/stays')
+        
 
 
     def delete_user(self, user_id):

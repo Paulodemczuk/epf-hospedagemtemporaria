@@ -3,7 +3,7 @@ from .base_controller import BaseController
 from services.stay_service import StayService
 from services.review_service import ReviewService
 from services.feature_service import FeatureService
-from utils import login_required, get_current_user_id
+from utils import get_current_user, login_required, get_current_user_id
 from models.user import UserModel
 
 
@@ -113,7 +113,12 @@ class StayController(BaseController):
             )
         else:
             self.stay_service.edit_stay(stay)
-            self.redirect('/stays')
+            
+        current = get_current_user()
+        if current and getattr(current, 'role', 'user') == 'admin':
+            self.redirect('/admin/stays')
+        else:
+            self.redirect('/my-stays')
 
     def delete_stay(self, stay_id):
         self.stay_service.delete_stay(stay_id)
