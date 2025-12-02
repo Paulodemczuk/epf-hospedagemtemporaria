@@ -3,6 +3,7 @@ from datetime import datetime, date
 from bottle import request
 from models.booking import BookingModel, Booking
 from models.stay import StayModel
+from models.user import UserModel
 
 
 
@@ -10,6 +11,7 @@ class BookingService:
     def __init__(self):
         self.model = BookingModel()
         self.stay_model = StayModel()
+        self.user_model = UserModel()
 
     def get_all(self) -> List[Booking]:
         return self.model.get_all()
@@ -38,7 +40,19 @@ class BookingService:
         nights = max(nights, 1)
         return stay.price_per_night * nights
     
-    def get_booking_summary(self, stay_id: int, check_in: str, check_out: str, guest_count: int):
+    def _calculate_price_details(self, stay, nights, guest_id):
+        original_total = stay.price_per_night * nights
+        discount = 0
+        
+        user = self.user_model.get_by_id(guest_id)
+        if user and user.is_premium:
+            discount = original_total * 0.15
+
+        final_total = original_total - discount
+        
+        return original_total, discount, final_total
+    
+    def get_booking_summary(self, stay_id: int, check_in: str, check_out: str, guest_count: int,guest_id: int):
         stay = self.stay_model.get_by_id(stay_id)
         if not stay:
             return None
@@ -64,7 +78,7 @@ class BookingService:
         except ValueError:
             return {"error": "Formato de data invalido."}
 
-        total = stay.price_per_night * nights
+        original, discount, final = self._calculate_price_details(stay, nights, guest_id)
 
         return {
             'stay': stay,
@@ -72,7 +86,9 @@ class BookingService:
             'check_out': check_out,
             'nights': nights,
             'price_per_night': stay.price_per_night,
-            'total': total,
+            'original_total': original,
+            'discount': discount,
+            'total': final,
             'guest_count': guest_count
         }
 
@@ -105,7 +121,7 @@ class BookingService:
         if self._has_conflict(stay_id, check_in, check_out):
             return "Conflito de reserva para esse período"
 
-        total = self._calc_total_price(stay_id, check_in, check_out)
+        _, _, final_price = self._calculate_price_details(stay, nights, guest_id)
 
         booking = Booking(
             id=self._next_id(),
@@ -113,7 +129,7 @@ class BookingService:
             guest_id=guest_id,
             check_in=check_in,
             check_out=check_out,
-            total_price=total,
+            total_price=final_price,
             status="confirmed"
         )
         self.model.add_booking(booking)

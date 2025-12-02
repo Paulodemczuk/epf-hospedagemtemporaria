@@ -49,6 +49,7 @@
     <div class="nav-left">
         <a href="/stays">Stays</a>
         <a href="/bookings">Reservas</a>
+        <a href="/premium" style="color: #f1c40f; font-weight: bold;">Premium 👑</a>
     </div>
 
     <div class="nav-right">

@@ -83,7 +83,8 @@ class BookingController(BaseController):
         except ValueError:
             guests_count = 1
 
-        summary = self.booking_service.get_booking_summary(stay_id, check_in, check_out, guests_count)
+        guest_id = get_current_user_id()
+        summary = self.booking_service.get_booking_summary(stay_id, check_in, check_out, guests_count, guest_id)
         
         if not summary or 'error' in summary:
             msg = summary.get('error') if summary else "Erro ao processar datas."

@@ -14,6 +14,12 @@ class UserService:
     def get_all(self):
         users = self.user_model.get_all()
         return users
+    
+    def toggle_premium(self, user_id):
+        user = self.user_model.get_by_id(user_id)
+        if user:
+            user.is_premium = not user.is_premium
+            self.user_model.update_user(user)
 
 
     def save(self):
