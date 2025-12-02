@@ -37,6 +37,44 @@ class BookingService:
         nights = (dt_out - dt_in).days
         nights = max(nights, 1)
         return stay.price_per_night * nights
+    
+    def get_booking_summary(self, stay_id: int, check_in: str, check_out: str, guest_count: int):
+        stay = self.stay_model.get_by_id(stay_id)
+        if not stay:
+            return None
+        
+        if guest_count > stay.max_guests:
+            return {"error": f"Esta hospedagem permite no maximo {stay.max_guests} pessoas."}
+        
+        if self._has_conflict(stay_id, check_in, check_out):
+            return {"error": "Datas indisponiveis para este periodo."}
+        
+        try:
+            dt_in = datetime.strptime(check_in, "%Y-%m-%d")
+            dt_out = datetime.strptime(check_out, "%Y-%m-%d")
+            if dt_in >= dt_out:
+                return {"error": "Data de saida deve ser maior que a entrada."}
+            
+            today = datetime.now()
+            if dt_in < today:
+                 return {"error": "A data de entrada nao pode ser no passado."}
+            
+            nights = (dt_out - dt_in).days
+
+        except ValueError:
+            return {"error": "Formato de data invalido."}
+
+        total = stay.price_per_night * nights
+
+        return {
+            'stay': stay,
+            'check_in': check_in,
+            'check_out': check_out,
+            'nights': nights,
+            'price_per_night': stay.price_per_night,
+            'total': total,
+            'guest_count': guest_count
+        }
 
     def save(self, stay_id: int, guest_id: int):
         form = request.forms
