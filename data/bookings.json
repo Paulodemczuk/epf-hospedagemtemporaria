@@ -25,5 +25,14 @@
         "check_out": "2026-04-17",
         "total_price": 4787.62,
         "status": "confirmed"
+    },
+    {
+        "id": 4,
+        "stay_id": 2,
+        "guest_id": 5,
+        "check_in": "2025-12-17",
+        "check_out": "2026-02-19",
+        "total_price": 102400.0,
+        "status": "confirmed"
     }
 ]

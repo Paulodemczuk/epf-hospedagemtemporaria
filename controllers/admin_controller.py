@@ -48,7 +48,6 @@ class AdminController(BaseController):
         return self.render('admin_bookings', bookings=bookings)
     
     def delete_user(self, user_id):
-        # opcional: impedir apagar admin id 0
         if user_id == 0:
             return "Não é permitido deletar o admin."
         self.user_service.delete_user(user_id)
