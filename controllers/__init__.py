@@ -8,11 +8,13 @@ from controllers.favorite_controller import favorite_routes
 from controllers.login_controller import login_routes
 from controllers.admin_controller import admin_routes
 from controllers.premium_controller import premium_routes
+from controllers.home_controller import home_routes
 
 
 def init_controllers(app: Bottle):
     app.merge(user_routes)
     app.merge(login_routes)
+    app.mount('/', home_routes)
     app.mount('/', user_routes)
     app.mount('/', stay_routes)
     app.mount('/', booking_routes)
@@ -21,3 +23,4 @@ def init_controllers(app: Bottle):
     app.mount('/', favorite_routes)
     app.mount('/', admin_routes)
     app.merge(premium_routes)
+

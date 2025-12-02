@@ -44,25 +44,34 @@
     }
 </style>
 
+% from bottle import request
+% home = (request.path == '/home')
 
 <nav class="top-nav">
-    <div class="nav-left">
-        <a href="/stays">Stays</a>
-        <a href="/bookings">Reservas</a>
-        <a href="/premium" style="color: #f1c40f; font-weight: bold;">Premium 👑</a>
-    </div>
+    % if home:
+        <div style="margin: 0 auto; font-weight: bold; font-size: 30px;">
+            <a href="/home" style="color: #fafbff; text-decoration: none;">UnBnB</a>
+        </div>
+    % else:
+        <div class="nav-left">
+            <a href="/home" style="font-size: 30px; font-weight: bold;">UnBnB</a>
+            <a href="/stays">Stays</a>
+            <a href="/bookings">Reservas</a>
+            <a href="/premium" style="color: #f1c40f; font-weight: bold;">Premium 👑</a>
+        </div>
 
-    <div class="nav-right">
-        % if defined('current_user') and current_user:
-            <span class="nav-hello">Olá, {{current_user.name}}!</span>
-            % if getattr(current_user, 'role', 'user') == 'admin':
-                <a href="/admin">Admin</a>
+        <div class="nav-right">
+            % if defined('current_user') and current_user:
+                <span class="nav-hello">Olá, {{current_user.name}}!</span>
+                % if getattr(current_user, 'role', 'user') == 'admin':
+                    <a href="/admin">Admin</a>
+                % end
+                <a href="/logout">Logout</a>
+            % else:
+                <a href="/login">Login</a>
             % end
-            <a href="/logout">Logout</a>
-        % else:
-            <a href="/login">Login</a>
-        % end
-    </div>
+        </div>
+    % end
 </nav>
 <hr>
 
@@ -71,4 +80,6 @@
 {{!base}}
 
 </body>
+
+
 </html>

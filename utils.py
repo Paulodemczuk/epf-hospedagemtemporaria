@@ -21,7 +21,12 @@ def login_required(func):
 
 def get_current_user_id():
     user_id_cookie = request.get_cookie("user_session", secret=Config.SECRET_KEY)
-    return int(user_id_cookie)
+    if not user_id_cookie:
+        return None
+    try:
+        return int(user_id_cookie)
+    except (TypeError, ValueError):
+        return None
 
 def get_current_user():
     user_id_cookie = request.get_cookie("user_session", secret=Config.SECRET_KEY)
