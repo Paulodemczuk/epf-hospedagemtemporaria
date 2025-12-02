@@ -17,8 +17,8 @@ class BaseController:
 
 
     def home_redirect(self):
-        """Redireciona a rota raiz para /users"""
-        return self.redirect('/users')
+        """Redireciona a rota raiz para /home"""
+        return self.redirect('/home')
 
 
     def helper(self):

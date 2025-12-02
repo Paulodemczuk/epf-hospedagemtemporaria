@@ -12,16 +12,9 @@ class UserController(BaseController):
 
     # Rotas User
     def setup_routes(self):
-        self.app.route('/users', method='GET', callback=self.list_users)
         self.app.route('/users/add', method=['GET', 'POST'], callback=self.add_user)
         self.app.route('/users/edit/<user_id:int>', method=['GET', 'POST'], callback=self.edit_user)
         self.app.route('/users/delete/<user_id:int>', method='POST', callback=self.delete_user)
-
-
-    def list_users(self):
-        users = self.user_service.get_all()
-        return self.render('users', users=users)
-
 
     def add_user(self):
         if request.method == 'GET':
@@ -29,7 +22,7 @@ class UserController(BaseController):
         else:
             # POST - salvar usuário
             self.user_service.save()
-            self.redirect('/users')
+            self.redirect('/login?msg=Cadastro+realizado+com+sucesso')
 
 
     def edit_user(self, user_id):
@@ -42,12 +35,12 @@ class UserController(BaseController):
         else:
             # POST - salvar edição
             self.user_service.edit_user(user)
-            self.redirect('/users')
+            self.redirect('/stays')
 
 
     def delete_user(self, user_id):
         self.user_service.delete_user(user_id)
-        self.redirect('/users')
+        self.redirect('/login')
 
 
 user_routes = Bottle()
