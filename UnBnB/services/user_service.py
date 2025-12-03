@@ -12,6 +12,7 @@ class UserService:
 
 
     def get_all(self):
+        self.user_model = UserModel()
         users = self.user_model.get_all()
         return users
     

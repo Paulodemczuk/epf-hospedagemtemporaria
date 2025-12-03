@@ -44,7 +44,7 @@
                 <td>#{{b.id}}</td>
                 <td>Stay #{{b.stay_id}}</td>
                 <td>Guest #{{b.guest_id}}</td>
-                <td>{{b.check_in}} <br> {{b.check_out}}</td>
+                <td>{{fmt_date(b.check_in)}} <br> {{fmt_date(b.check_out)}}</td>
                 <td><span class="status-badge">{{b.status}}</span></td>
                 <td>
                     <div class="action-buttons">

@@ -21,6 +21,7 @@ class AdminController(BaseController):
                        callback=admin_required(self.dashboard))
         self.app.route('/admin/users', method='GET',
                        callback=admin_required(self.list_users))
+        self.app.route('/admin/analytics', method='GET', callback=admin_required(self.analytics))
         self.app.route('/admin/stays', method='GET',
                        callback=admin_required(self.list_stays))
         self.app.route('/admin/bookings', method='GET',
@@ -46,6 +47,10 @@ class AdminController(BaseController):
     def list_bookings(self):
         bookings = self.booking_service.get_all()
         return self.render('admin_bookings', bookings=bookings)
+    
+    def analytics(self):
+        chart_data = self.booking_service.get_monthly_earnings_chart()
+        return self.render('admin_analytics', chart=chart_data)
     
     def delete_user(self, user_id):
         if user_id == 0:

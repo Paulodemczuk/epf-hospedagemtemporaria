@@ -69,11 +69,11 @@ class BookingController(BaseController):
         else:
             self.booking_service.edit_booking(booking)
         
-        current = get_current_user()
-        if current and getattr(current, 'role', 'user') == 'admin':
-            self.redirect('/admin/bookings')
-        else:
-            self.redirect('/bookings')
+            current = get_current_user()
+            if current and getattr(current, 'role', 'user') == 'admin':
+                self.redirect('/admin/bookings')
+            else:
+                self.redirect('/bookings')
 
     def delete_booking(self, booking_id):
         self.booking_service.delete_booking(booking_id)

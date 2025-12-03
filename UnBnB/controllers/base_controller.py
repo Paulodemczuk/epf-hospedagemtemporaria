@@ -1,5 +1,5 @@
 from bottle import static_file
-from utils import get_current_user
+from utils import get_current_user, format_date
 
 class BaseController:
     def __init__(self, app):
@@ -35,6 +35,7 @@ class BaseController:
         from bottle import template
         current_user = get_current_user()
         kwargs['current_user'] = current_user
+        kwargs['fmt_date'] = format_date
         return template(template_name, **kwargs)
 
 

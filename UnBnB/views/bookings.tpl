@@ -110,7 +110,7 @@
               </div>
 
               <div class="booking-dates">
-                  {{b.check_in}} até {{b.check_out}}
+                  {{fmt_date(b.check_in)}} até {{fmt_date(b.check_out)}}
               </div>
 
               <div class="booking-meta">

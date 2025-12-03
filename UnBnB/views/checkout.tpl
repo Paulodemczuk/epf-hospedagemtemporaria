@@ -9,8 +9,8 @@
     </div>
 
     <div style="margin-bottom: 20px;">
-        <p><strong>Entrada:</strong> {{summary['check_in']}}</p>
-        <p><strong>Saída:</strong> {{summary['check_out']}}</p>
+        <p><strong>Entrada:</strong> {{fmt_date(summary['check_in'])}}</p>
+        p><strong>Saída:</strong> {{fmt_date(summary['check_out'])}}</p>
         <p><strong>Duração:</strong> {{summary['nights']}} noite(s)</p>
         <p><strong>Hóspedes:</strong> {{summary['guest_count']}} pessoa(s)</p>
         <hr>

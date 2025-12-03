@@ -3,6 +3,7 @@ from bottle import redirect, request
 from functools import wraps
 from config import Config
 from models.user import UserModel
+from datetime import datetime
 
 
 def to_hash(input):
@@ -52,3 +53,12 @@ def admin_required(func):
             redirect('/login?error=Voce+nao+tem+permissao+para+acessar+esta+area')
         return func(*args, **kwargs)
     return wrapper
+
+def format_date(date_str):
+    if not date_str:
+        return ""
+    try:
+        dt = datetime.strptime(date_str, "%Y-%m-%d")
+        return dt.strftime("%d/%m/%Y")
+    except ValueError:
+        return date_str

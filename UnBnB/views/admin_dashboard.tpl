@@ -60,6 +60,12 @@
     </div>
 
     <div class="admin-grid">
+        <a href="/admin/analytics" class="admin-card">
+            <span class="card-icon">📊</span>
+            <span class="card-title">Relatórios & Gráficos</span>
+            <span class="card-desc">Visualize o faturamento mensal e métricas.</span>
+        </a>
+        
         <a href="/admin/users" class="admin-card">
             <span class="card-icon">👥</span>
             <span class="card-title">Gerenciar Usuários</span>

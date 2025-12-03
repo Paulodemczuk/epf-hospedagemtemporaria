@@ -1,4 +1,9 @@
 from typing import List, Optional
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import io
+import base64
 from datetime import datetime, date
 from bottle import request
 from models.booking import BookingModel, Booking
@@ -14,6 +19,7 @@ class BookingService:
         self.user_model = UserModel()
 
     def get_all(self) -> List[Booking]:
+        self.model = BookingModel()
         return self.model.get_all()
 
     def get_by_id(self, booking_id: int) -> Optional[Booking]:
@@ -91,6 +97,47 @@ class BookingService:
             'total': final,
             'guest_count': guest_count
         }
+    
+    def get_monthly_earnings_chart(self):
+        bookings = self.model.get_all()
+        earnings = {}
+
+        for b in bookings:
+            if b.status == 'confirmed':
+                month_key = b.check_in[:7] 
+                current = earnings.get(month_key, 0.0)
+                earnings[month_key] = current + b.total_price
+
+        if not earnings:
+            return None
+
+        sorted_months = sorted(earnings.keys())
+        values = [earnings[m] for m in sorted_months]
+
+        plt.figure(figsize=(8, 4))
+
+        bars = plt.bar(sorted_months, values, color='#2f1c6a', alpha=0.8)
+        plt.title('Faturamento Mensal (R$)', fontsize=14, fontweight='bold', color='#333')
+        plt.xlabel('Mês', fontsize=10)
+        plt.ylabel('Total (R$)', fontsize=10)
+        plt.grid(axis='y', linestyle='--', alpha=0.5)
+        
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width()/2., height,
+                     f'R${height:.0f}',
+                     ha='center', va='bottom', fontsize=9)
+
+        plt.tight_layout()
+
+        img_buffer = io.BytesIO()
+        plt.savefig(img_buffer, format='png')
+        img_buffer.seek(0)
+        plt.close()
+
+        img_b64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
+
+        return img_b64
 
     def save(self, stay_id: int, guest_id: int):
         form = request.forms
@@ -101,6 +148,7 @@ class BookingService:
         try: 
             dt_in = datetime.strptime(check_in, "%Y-%m-%d")
             dt_out = datetime.strptime(check_out, "%Y-%m-%d")
+            nights = (dt_out - dt_in).days
         except (TypeError, ValueError):
             return "Datas inválidas"
         
