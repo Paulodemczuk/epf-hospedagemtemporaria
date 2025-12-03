@@ -17,6 +17,7 @@ class PremiumController(BaseController):
         return self.render('premium_landing')
 
     def subscribe(self):
+        self.user_service = UserService()
         user_id = get_current_user_id()
         self.user_service.toggle_premium(user_id)
         self.redirect('/premium?success=1')
