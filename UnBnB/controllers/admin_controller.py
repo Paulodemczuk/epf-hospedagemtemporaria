@@ -48,8 +48,12 @@ class AdminController(BaseController):
     def list_bookings(self):
         bookings = self.booking_service.get_all()
         users = self.user_model.get_all()
+        stays = self.stay_service.get_all()
+
         users_by_id = {u.id: u for u in users}
-        return self.render('admin_bookings', bookings=bookings, users_by_id=users_by_id)
+        stay_by_id = {s.id: s for s in stays}
+
+        return self.render('admin_bookings', bookings=bookings, users_by_id=users_by_id, stay_by_id=stay_by_id)
     
     def analytics(self):
         earnings_chart = self.booking_service.get_monthly_earnings_chart()

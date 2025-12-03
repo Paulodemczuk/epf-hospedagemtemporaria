@@ -42,7 +42,10 @@
         % for b in bookings:
             <tr>
                 <td>#{{b.id}}</td>
-                <td>Stay #{{b.stay_id}}</td>
+                <td>
+                    % stay = stay_by_id.get(b.stay_id)
+                    {{stay.title if stay else ('Stay #' + str(b.stay_id))}}
+                </td>
                 <td>
                     % guest = users_by_id.get(b.guest_id) 
                     {{guest.name if guest else b.guest_id}}
