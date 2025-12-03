@@ -30,7 +30,7 @@ Para acessar o Painel Administrativo é possivel acessar o login de admin a part
 
 ## Diagrama de Classes
 
-<img src="/UnBnb/static/img/diagrama.png"  width=600px alt="imagem do diagrama de classes" title="Diagrama de Classes">
+<img src="UnBnb/static/img/diagrama.png"  width=1200px alt="imagem do diagrama de classes" title="Diagrama de Classes">
 
 ## Instruções de instalação/execução
 
