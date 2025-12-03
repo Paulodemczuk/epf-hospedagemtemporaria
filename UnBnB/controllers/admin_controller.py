@@ -7,6 +7,7 @@ from utils import admin_required
 from services.user_service import UserService
 
 
+
 class AdminController(BaseController):
     def __init__(self, app):
         super().__init__(app)
@@ -46,7 +47,9 @@ class AdminController(BaseController):
 
     def list_bookings(self):
         bookings = self.booking_service.get_all()
-        return self.render('admin_bookings', bookings=bookings)
+        users = self.user_model.get_all()
+        users_by_id = {u.id: u for u in users}
+        return self.render('admin_bookings', bookings=bookings, users_by_id=users_by_id)
     
     def analytics(self):
         chart_data = self.booking_service.get_monthly_earnings_chart()

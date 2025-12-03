@@ -32,7 +32,7 @@
             <tr>
                 <th>ID</th>
                 <th>Stay</th>
-                <th>Guest</th>
+                <th>Hóspede</th>
                 <th>Período</th>
                 <th>Status</th>
                 <th>Ações</th>
@@ -43,7 +43,10 @@
             <tr>
                 <td>#{{b.id}}</td>
                 <td>Stay #{{b.stay_id}}</td>
-                <td>Guest #{{b.guest_id}}</td>
+                <td>
+                    % guest = users_by_id.get(b.guest_id) 
+                    {{guest.name if guest else b.guest_id}}
+                </td>
                 <td>{{fmt_date(b.check_in)}} <br> {{fmt_date(b.check_out)}}</td>
                 <td><span class="status-badge">{{b.status}}</span></td>
                 <td>
