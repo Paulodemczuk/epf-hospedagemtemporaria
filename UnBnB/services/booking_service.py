@@ -198,6 +198,19 @@ class BookingService:
             booking.check_in,
             booking.check_out
         )
+
+        try:
+            d1 = datetime.strptime(booking.check_in, "%Y-%m-%d")
+            d2 = datetime.strptime(booking.check_out, "%Y-%m-%d")
+            nights = (d2 - d1).days
+        except ValueError:
+            return "Datas inválidas"
+
+        stay = self.stay_model.get_by_id(booking.stay_id)
+        _, _, final_price = self._calculate_price_details(stay, nights, booking.guest_id)
+        
+        booking.total_price = final_price
+
         booking.status = form.get('status') or booking.status
         self.model.update_booking(booking)
 

@@ -23,7 +23,7 @@ class UserController(BaseController):
         else:
             # POST - salvar usuário
             self.user_service.save()
-            self.redirect('/login?msg=Cadastro+realizado+com+sucesso')
+            return self.redirect('/login?msg=Cadastro+realizado+com+sucesso')
 
 
     def edit_user(self, user_id):
@@ -39,15 +39,15 @@ class UserController(BaseController):
         
         current = get_current_user()
         if current and getattr(current, 'role', 'user') == 'admin':
-            self.redirect('/admin/users')
+            return self.redirect('/admin/users')
         else:
-            self.redirect('/stays')
+            return self.redirect('/stays')
         
 
 
     def delete_user(self, user_id):
         self.user_service.delete_user(user_id)
-        self.redirect('/login')
+        return self.redirect('/login')
 
 
 user_routes = Bottle()

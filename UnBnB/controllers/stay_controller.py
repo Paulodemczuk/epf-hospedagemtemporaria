@@ -96,7 +96,7 @@ class StayController(BaseController):
         else:
             host_id = int(request.forms.get('host_id') or 1)
             self.stay_service.save(get_current_user_id())
-            self.redirect('/stays?msg=Stay+criada+com+sucesso')
+            return self.redirect('/stays?msg=Stay+criada+com+sucesso')
 
     def edit_stay(self, stay_id):
         stay = self.stay_service.get_by_id(stay_id)
@@ -116,13 +116,13 @@ class StayController(BaseController):
             
         current = get_current_user()
         if current and getattr(current, 'role', 'user') == 'admin':
-            self.redirect('/admin/stays')
+            return self.redirect('/admin/stays')
         else:
-            self.redirect('/my-stays')
+            return self.redirect('/my-stays')
 
     def delete_stay(self, stay_id):
         self.stay_service.delete_stay(stay_id)
-        self.redirect('/stays')
+        return self.redirect('/stays')
 
     def show_stay(self, stay_id):
         stay = self.stay_service.get_by_id(stay_id)

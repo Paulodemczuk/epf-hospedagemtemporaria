@@ -63,15 +63,15 @@ class AdminController(BaseController):
         if user_id == 0:
             return "Não é permitido deletar o admin."
         self.user_service.delete_user(user_id)
-        self.redirect('/admin/users')
+        return self.redirect('/admin/users')
 
     def delete_stay(self, stay_id):
         self.stay_service.delete_stay(stay_id)
-        self.redirect('/admin/stays')
+        return self.redirect('/admin/stays')
 
     def delete_booking(self, booking_id):
         self.booking_service.delete_booking(booking_id)
-        self.redirect('/admin/bookings')
+        return self.redirect('/admin/bookings')
 
 
 admin_routes = Bottle()

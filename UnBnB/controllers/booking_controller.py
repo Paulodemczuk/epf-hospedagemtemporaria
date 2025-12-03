@@ -50,7 +50,7 @@ class BookingController(BaseController):
             result = self.booking_service.save(stay_id, guest_id)
             if isinstance(result, str):
                 return result
-            self.redirect('/bookings')
+            return self.redirect('/bookings')
 
     def edit_booking(self, booking_id):
         booking = self.booking_service.get_by_id(booking_id)
@@ -71,13 +71,13 @@ class BookingController(BaseController):
         
             current = get_current_user()
             if current and getattr(current, 'role', 'user') == 'admin':
-                self.redirect('/admin/bookings')
+                return self.redirect('/admin/bookings')
             else:
-                self.redirect('/bookings')
+                return self.redirect('/bookings')
 
     def delete_booking(self, booking_id):
         self.booking_service.delete_booking(booking_id)
-        self.redirect('/bookings')
+        return self.redirect('/bookings')
 
     def checkout(self):
         stay_id = int(request.forms.get('stay_id') or request.query.get('stay_id'))
@@ -109,7 +109,7 @@ class BookingController(BaseController):
         if isinstance(result, str):
             return result
             
-        self.redirect('/bookings?msg=Reserva+confirmada+com+sucesso!')
+        return self.redirect('/bookings?msg=Reserva+confirmada+com+sucesso!')
 
 
 booking_routes = Bottle()
