@@ -33,3 +33,30 @@ Para acessar o Painel Administrativo é possivel acessar o login de admin a part
 <img src="/UnBnb/static/img/diagrama.png"  width=600px alt="imagem do diagrama de classes" title="Diagrama de Classes">
 
 ## Instruções de instalação/execução
+
+1. Clone o repositório ou extraia os arquivos:
+```bash
+git clone https://github.com/Paulodemczuk/epf-hospedagemtemporaria/tree/main
+cd unbnb
+```
+
+2. Crie o ambiente virtual na pasta fora do seu projeto:
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\\Scripts\\activate     # Windows
+```
+
+3. Entre dentro do seu projeto criado a partir do template e instale as dependências:
+```bash
+pip install -r requirements.txt
+```
+
+4. Rode a aplicação:
+```bash
+python main.py
+```
+
+5. Accese sua aplicação no navegador em: [http://localhost:8080](http://localhost:8080)
+
+---
