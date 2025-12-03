@@ -101,6 +101,23 @@
       display: inline;
       margin: 0;
   }
+
+  .no-reviews {
+      text-align: center;
+      padding: 50px 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      border: 1px dashed #ccc;
+      margin-top: 20px;
+  }
+  .no-reviews h3 {
+      color: #2f1c6a;
+      margin-bottom: 10px;
+  }
+  .no-reviews p {
+      color: #666;
+      margin-bottom: 20px;
+  }
 </style>
 
 <div class="reviews-container">
@@ -110,55 +127,65 @@
           Média: {{f"{(sum(r.rating for r in reviews) / len(reviews)):.2f}" if reviews else '—'}} / 5 - {{len(reviews)}} review(s)
       </p>
       <p>
-          <a href="/stays/{{stay.id}}">Voltar para a stay</a> |
-          <a href="/stays/{{stay.id}}/reviews/add">Adicionar review</a>
+          <a href="/stays/{{stay.id}}">Voltar para a stay</a> 
+          % if reviews:
+             | <a href="/stays/{{stay.id}}/reviews/add">Adicionar review</a>
+          % end
       </p>
   </div>
 
-  <ul class="reviews-list">
-  % for review in reviews:
-      % filled = int(review.rating)
-      % empty = 5 - filled
-      <li class="review-card">
-          <div class="review-top">
-              <span class="review-author">{{users_by_id.get(review.user_id, 'Usuário #' + str(review.user_id))}}
-              </span>
-              <span>Nota: {{review.rating}} / 5</span>
-          </div>
+  % if reviews:
+      <ul class="reviews-list">
+      % for review in reviews:
+          % filled = int(review.rating)
+          % empty = 5 - filled
+          <li class="review-card">
+              <div class="review-top">
+                  <span class="review-author">{{users_by_id.get(review.user_id, 'Usuário #' + str(review.user_id))}}
+                  </span>
+                  <span>Nota: {{review.rating}} / 5</span>
+              </div>
 
-          <div class="review-rating-line">
-              <span class="review-stars">
-                  % for i in range(filled):
-                      ★
+              <div class="review-rating-line">
+                  <span class="review-stars">
+                      % for i in range(filled):
+                          ★
+                      % end
+                      % for i in range(empty):
+                          ☆
+                      % end
+                  </span>
+                  % if getattr(review, 'recomenda', True):
+                      <span class="review-badge good">Recomendaria</span>
+                  % else:
+                      <span class="review-badge bad">Não recomendaria</span>
                   % end
-                  % for i in range(empty):
-                      ☆
+              </div>
+
+              <div class="review-comment">
+                  % if review.comment and review.comment.strip():
+                      {{review.comment}}
+                  % else:
+                      <em>Sem comentário.</em>
                   % end
-              </span>
-              % if getattr(review, 'recomenda', True):
-                  <span class="review-badge good">Recomendaria</span>
-              % else:
-                  <span class="review-badge bad">Não recomendaria</span>
-              % end
-          </div>
+              </div>
 
-          <div class="review-comment">
-              % if review.comment and review.comment.strip():
-                  {{review.comment}}
-              % else:
-                  <em>Sem comentário.</em>
-              % end
-          </div>
-
-          <div class="review-actions">
-                % if defined('current_user_id') and current_user_id and review.user_id == current_user_id:
-                    <a href="/reviews/edit/{{review.id}}" class="btn-review">Editar</a>
-                    <form action="/reviews/delete/{{review.id}}" method="post">
-                        <button type="submit" class="btn-review delete">Excluir</button>
-                    </form>
-                % end
-            </div>
-      </li>
+              <div class="review-actions">
+                    % if defined('current_user_id') and current_user_id and review.user_id == current_user_id:
+                        <a href="/reviews/edit/{{review.id}}" class="btn-review">Editar</a>
+                        <form action="/reviews/delete/{{review.id}}" method="post">
+                            <button type="submit" class="btn-review delete">Excluir</button>
+                        </form>
+                    % end
+                </div>
+          </li>
+      % end
+      </ul>
+  % else:
+      <div class="no-reviews">
+          <h3>Nenhuma avaliação ainda 🌟</h3>
+          <p>Esta hospedagem ainda não recebeu opiniões. Que tal ser o primeiro a avaliar?</p>
+          <a href="/stays/{{stay.id}}/reviews/add" class="btn-review">Avaliar Agora</a>
+      </div>
   % end
-  </ul>
 </div>

@@ -1,8 +1,8 @@
 from bottle import Bottle, request, redirect
 from .base_controller import BaseController
 from services.review_service import ReviewService
-from models.stay import StayModel
-from models.user import UserModel
+from services.stay_service import StayService
+from services.user_service import UserService
 from utils import get_current_user_id
 
 
@@ -10,8 +10,8 @@ class ReviewController(BaseController):
     def __init__(self, app):
         super().__init__(app)
         self.review_service = ReviewService()
-        self.stay_model = StayModel()
-        self.user_model = UserModel()
+        self.stay_service = StayService()
+        self.user_service = UserService()
         self.setup_routes()
 
     def setup_routes(self):
@@ -46,13 +46,16 @@ class ReviewController(BaseController):
         return self.render('reviews', reviews=reviews)
 
     def list_reviews_by_stay(self, stay_id):
-        stay = self.stay_model.get_by_id(stay_id)
+        stay = self.stay_service.get_by_id(stay_id)
+        if not stay:
+            return "Stay nao encontrada (Id invalido)"
+        
         reviews = self.review_service.get_by_stay(stay_id)
 
         users_by_id = {}
         for r in reviews:
             if r.user_id not in users_by_id:
-                user = self.user_model.get_by_id(r.user_id)
+                user = self.user_service.get_by_id(r.user_id)
                 users_by_id[r.user_id] = user.name if user else f"Usuário #{r.user_id}"
 
         try:
@@ -70,7 +73,7 @@ class ReviewController(BaseController):
 
     def add_review(self, stay_id):
         if request.method == 'GET':
-            stay = self.stay_model.get_by_id(stay_id)
+            stay = self.stay_service.get_by_id(stay_id)
             return self.render(
                 'review_form',
                 review=None,
@@ -102,7 +105,7 @@ class ReviewController(BaseController):
             return "Você não tem permissão para editar esta review."
 
         if request.method == 'GET':
-            stay = self.stay_model.get_by_id(review.stay_id)
+            stay = self.stay_service.get_by_id(review.stay_id)
             return self.render(
                 'review_form',
                 review=review,
@@ -129,7 +132,7 @@ class ReviewController(BaseController):
 
         stay_id = review.stay_id
         self.review_service.delete_review(review_id)
-        self.redirect(f"/stays/{stay_id}/reviews")
+        return self.redirect(f"/stays/{stay_id}/reviews")
 
 
 review_routes = Bottle()
