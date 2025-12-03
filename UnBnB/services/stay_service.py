@@ -1,6 +1,12 @@
 from typing import List, Optional
 from bottle import request
 import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import io
+import base64
+from collections import Counter
 from models.stay import StayModel, Stay
 
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '..', 'static', 'img', 'stays')
@@ -44,6 +50,36 @@ class StayService:
         if not stays:
             return 1
         return max(s.id for s in stays) + 1
+    
+    def get_stays_by_city_chart(self):
+        self._reload()
+        stays = self.model.get_all()
+        
+        if not stays:
+            return None
+
+        cities = [s.city for s in stays]
+        counts = Counter(cities)
+        
+        labels_cites = list(counts.keys())
+        sizes = list(counts.values())
+
+        plt.figure(figsize=(6, 4))
+
+        colors = ['#2f1c6a', '#5e35b1', '#7e57c2', '#9575cd', '#b39ddb']
+        
+        plt.pie(sizes, labels=labels_cites, autopct='%1.1f%%', 
+                startangle=140, colors=colors[:len(labels_cites)])
+        
+        plt.title('Stays por Cidade', fontsize=14, fontweight='bold', color='#333')
+        plt.tight_layout()
+
+        img_buffer = io.BytesIO()
+        plt.savefig(img_buffer, format='png')
+        img_buffer.seek(0)
+        plt.close()
+
+        return base64.b64encode(img_buffer.getvalue()).decode('utf-8')
 
     def save(self, host_id: int):
         form = request.forms

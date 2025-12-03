@@ -52,8 +52,12 @@ class AdminController(BaseController):
         return self.render('admin_bookings', bookings=bookings, users_by_id=users_by_id)
     
     def analytics(self):
-        chart_data = self.booking_service.get_monthly_earnings_chart()
-        return self.render('admin_analytics', chart=chart_data)
+        earnings_chart = self.booking_service.get_monthly_earnings_chart()
+        stays_chart = self.stay_service.get_stays_by_city_chart()
+        
+        return self.render('admin_analytics', 
+                         earnings_chart=earnings_chart, 
+                         stays_chart=stays_chart)
     
     def delete_user(self, user_id):
         if user_id == 0:
