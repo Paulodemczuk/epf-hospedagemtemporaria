@@ -1,7 +1,7 @@
 # UnBnB - Sistema de Hospedagem Temporária - 2025.2
 
 ## Sobre o projeto
-O UnBnB é um sistema de hospedagem temporária, permitindo que os usuarios criem anuncios (stays) de estadias e aluguem o local desejado.
+O UnBnB é um sistema de hospedagem temporária, permitindo que os usuarios criem anuncios de estadias (stays) e aluguem o local desejado.
 
 Alem de alugar e listar imoveis, os usuarios podem favoritar locais, fazer reviews, "assinar" um plano premium para receber descontos.
 
@@ -11,7 +11,7 @@ Alem de alugar e listar imoveis, os usuarios podem favoritar locais, fazer revie
 
 ### Stays (Hospedagens)
 * Anuncios: Stays podem ser criadas, editadas listadas e excluidas.
-* Imagens: Podem ser feito o upload de imagens para ilustrar o anuncio (uma imagem padrao esta definida caso nao aja upload de uma imagem)
+* Imagens: Podem ser feito o upload de imagens para ilustrar o anuncio (uma imagem padrao esta definida caso nao haja upload de uma imagem)
 * Filtros: Buscas por cidade, features (Wifi, Piscina, etc) e nota de avaliação.
 * Reviews: Sistema de avaliação (de 1 a 5 estrelas) com comentarios e média calculada automaticamente.
 
