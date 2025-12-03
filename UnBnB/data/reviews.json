@@ -38,5 +38,13 @@
         "rating": 4,
         "comment": "da boa ",
         "recomenda": true
+    },
+    {
+        "id": 6,
+        "stay_id": 3,
+        "user_id": 5,
+        "rating": 5,
+        "comment": "Pais abencoado por deus e bonito por natureza, que beleza!",
+        "recomenda": true
     }
 ]

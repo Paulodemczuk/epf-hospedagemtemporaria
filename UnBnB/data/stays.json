@@ -37,5 +37,21 @@
             22
         ],
         "image_filename": "stay_2.png"
+    },
+    {
+        "id": 3,
+        "title": "Pais tropical",
+        "city": "Brasilia",
+        "price_per_night": 138.0,
+        "max_guests": 8,
+        "host_id": 4,
+        "features_ids": [
+            1,
+            3,
+            6,
+            12,
+            13
+        ],
+        "image_filename": "stay_3.png"
     }
 ]
