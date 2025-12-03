@@ -49,7 +49,7 @@ class BookingService:
     def _calculate_price_details(self, stay, nights, guest_id):
         original_total = stay.price_per_night * nights
         discount = 0
-        
+        self.user_model = UserModel()
         user = self.user_model.get_by_id(guest_id)
         if user and user.is_premium:
             discount = original_total * 0.15
